@@ -21,3 +21,18 @@
 - 收到用户通过 `AskUserQuestion` 的确认回复后，再进行实际操作
 
 此规则适用于：代码编辑、文件创建/删除、Shell 命令执行、配置变更等一切实质性操作。对话期间所有交互均应保持在同一会话中，不得中断。
+
+## 开发工作流偏好（Superpowers 集成）
+
+当涉及以下场景时，应主动通过 AskUserQuestion 建议用户使用对应的 Superpowers 技能：
+
+- **新功能/创意讨论** → 建议 `/brainstorming`
+- **多步骤实现任务** → 建议 `/writing-plans`
+- **编写代码** → 遵循 TDD 原则（建议 `/test-driven-development`）
+- **遇到 bug/测试失败** → 建议 `/systematic-debugging`
+- **声称任务完成前** → 建议 `/verification-before-completion`
+- **代码审查** → 建议 `/requesting-code-review`
+- **分支合并/PR** → 建议 `/finishing-a-development-branch`
+
+注意：建议使用技能时，通过 AskUserQuestion 提供选项让用户决定是否启用，
+不强制每次都走完整流程。简单任务可直接执行。
