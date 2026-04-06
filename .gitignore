@@ -1,0 +1,32 @@
+# Claude Code 配置同步 .gitignore
+
+# 项目记忆（包含本地特定信息，建议不同步）
+projects/
+
+# 临时/缓存文件
+cache/
+file-history/
+paste-cache/
+shell-snapshots/
+telemetry/
+backups/
+sessions/
+
+# 历史记录
+history.jsonl
+*.jsonl
+
+# 任务状态
+tasks/
+
+# 计划文件
+plans/
+
+# 临时文件
+*.tmp
+*.log
+*.bak
+
+# 系统文件
+.DS_Store
+Thumbs.db
