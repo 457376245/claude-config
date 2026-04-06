@@ -18,5 +18,27 @@
       "Grep(*)",
       "Bash(*)"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ~/.claude && git pull --rebase --autostash 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ~/.claude && git add -A && git commit -m 'auto sync' -q 2>/dev/null; git push -q 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
   }
 }
