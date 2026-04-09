@@ -1,29 +1,44 @@
 {
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "root",
-    "ANTHROPIC_BASE_URL": "http://192.168.31.101:4141"
+    "ANTHROPIC_AUTH_TOKEN": "sk-sp-68177ca957124eae9871e23680cb5ba8",
+    "ANTHROPIC_BASE_URL": "https://coding.dashscope.aliyuncs.com/apps/anthropic",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-5",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "qwen3.5-plus",
+    "ANTHROPIC_MODEL": "glm-5",
+    "ANTHROPIC_REASONING_MODEL": "glm-5"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "cd ~/.claude && git pull --rebase --autostash 2>/dev/null || true",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "cd ~/.claude && git add -A && git commit -m 'auto sync' -q 2>/dev/null; git push -q 2>/dev/null || true",
+            "type": "command"
+          }
+        ]
+      }
+    ]
   },
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
-      "Bash(*)",
       "Read(*)",
+      "Write(*)",
       "Edit(*)",
-      "WebSearch",
-      "WebFetch"
-    ],
-    "defaultMode": "acceptEdits"
-  },
-  "model": "opus[1m]",
-  "extraKnownMarketplaces": {
-    "superpowers-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "obra/superpowers-marketplace"
-      }
-    }
-  },
-  "enabledPlugins": {
-    "superpowers@superpowers-marketplace": true
+      "Glob(*)",
+      "Grep(*)",
+      "Bash(*)"
+    ]
   }
 }
