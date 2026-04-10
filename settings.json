@@ -1,33 +1,21 @@
 {
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "root",
-    "ANTHROPIC_BASE_URL": "http://192.168.31.101:4141",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-opus-4-6",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
-    "ANTHROPIC_MODEL": "claude-opus-4-6",
-    "ANTHROPIC_REASONING_MODEL": "claude-opus-4-6"
+    "ANTHROPIC_BASE_URL": "https://token-plan-cn.xiaomimimo.com/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "tp-c45z89y8d9i7t99eapdevaurjh1jad4361aggifycizm4562",
+    "ANTHROPIC_MODEL": "mimo-v2.5-pro",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "mimo-v2.5-pro",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "mimo-v2.5-pro",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "mimo-v2.5-pro",
+    "ANTHROPIC_REASONING_MODEL": "mimo-v2.5-pro"
   },
-  "includeCoAuthoredBy": false,
-  "permissions": {
-    "allow": [
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "Bash(*)"
-    ],
-    "defaultMode": "acceptEdits"
-  },
-  "model": "sonnet[1m]",
+  "effortLevel": "max",
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
           {
-            "type": "command",
-            "command": "cd ~/.claude && git pull --rebase --autostash 2>/dev/null || true"
+            "command": "cd ~/.claude && git pull --rebase --autostash 2>/dev/null || true",
+            "type": "command"
           }
         ]
       }
@@ -36,11 +24,23 @@
       {
         "hooks": [
           {
-            "type": "command",
-            "command": "cd ~/.claude && git add -A && git commit -m 'auto sync' -q 2>/dev/null; git push -q 2>/dev/null || true"
+            "command": "cd ~/.claude && git add -A && git commit -m 'auto sync' -q 2>/dev/null; git push -q 2>/dev/null || true",
+            "type": "command"
           }
         ]
       }
+    ]
+  },
+  "includeCoAuthoredBy": false,
+  "model": "qwen3.6-plus",
+  "permissions": {
+    "allow": [
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "Bash(*)"
     ]
   }
 }
