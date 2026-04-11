@@ -31,7 +31,7 @@
     ]
   },
   "includeCoAuthoredBy": false,
-  "model": "sonnet[1m]",
+  "model": "qwen3.6-plus",
   "permissions": {
     "allow": [
       "Read(*)",
