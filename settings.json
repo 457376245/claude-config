@@ -1,37 +1,9 @@
 {
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "sk-sp-68177ca957124eae9871e23680cb5ba8",
-    "ANTHROPIC_BASE_URL": "https://coding.dashscope.aliyuncs.com/apps/anthropic",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "qwen3.6-plus",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "qwen3.6-plus",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "qwen3.6-plus",
-    "ANTHROPIC_MODEL": "qwen3.6-plus",
-    "ANTHROPIC_REASONING_MODEL": "qwen3.6-plus"
-  },
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "cd ~/.claude && git pull --rebase --autostash 2>/dev/null || true",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "cd ~/.claude && git add -A && git commit -m 'auto sync' -q 2>/dev/null; git push -q 2>/dev/null || true",
-            "type": "command"
-          }
-        ]
-      }
-    ]
+    "ANTHROPIC_AUTH_TOKEN": "PROXY_MANAGED",
+    "ANTHROPIC_BASE_URL": "http://127.0.0.1:15721"
   },
   "includeCoAuthoredBy": false,
-  "model": "qwen3.6-plus",
   "permissions": {
     "allow": [
       "Read(*)",
@@ -40,6 +12,29 @@
       "Glob(*)",
       "Grep(*)",
       "Bash(*)"
+    ]
+  },
+  "model": "opus[1m]",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ~/.claude && git pull --rebase --autostash 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ~/.claude && git add -A && git commit -m 'auto sync' -q 2>/dev/null; git push -q 2>/dev/null || true"
+          }
+        ]
+      }
     ]
   }
 }
