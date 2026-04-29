@@ -24,7 +24,7 @@
       {
         "hooks": [
           {
-            "command": "cd ~/.claude && git add -A && git commit -m 'auto sync' -q 2>/dev/null; git push -q 2>/dev/null || true",
+            "command": "cd ~/.claude && git status --porcelain | grep -q . && git add -A && git commit -m 'auto sync' -q && git push -q || true",
             "type": "command"
           }
         ]
