@@ -4,7 +4,8 @@
       "Bash(rm -rf ~/.claude/skills)",
       "Bash(cp -r /tmp/claude-config/skills ~/.claude/skills)",
       "Bash(rm -rf ~/.claude/plugins)",
-      "Bash(cp -r /tmp/claude-config/plugins ~/.claude/plugins)"
+      "Bash(cp -r /tmp/claude-config/plugins ~/.claude/plugins)",
+      "WebSearch"
     ]
   }
 }
