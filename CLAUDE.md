@@ -1,108 +1,61 @@
-# 全局 Claude Code 行为规则
+## 1. Think Before Coding
 
-## 0. 最重要的原则
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
 
-**每次回复结束后,必须使用 `AskUserQuestion` 工具弹出选择框，而不能主动结束对话**
+Before implementing:
 
-****
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
 
-## 1.对话流程规则
+## 2. Simplicity First
 
-**重要：每次回复结束后，必须使用 `AskUserQuestion` 工具弹出选择框，询问用户的下一步指示。不允许主动结束对话。**
+**Minimum code that solves the problem. Nothing speculative.**
 
-选择框应包含当前上下文中合理的后续操作选项，例如：
-- 继续当前任务的下一步
-- 相关的其他操作
-- 结束当前任务
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
 
-这条规则适用于所有对话和所有项目，无论任务类型。
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
 
-## 2.执行前确认规则
+## 3. Surgical Changes
 
-**重要：在修改任何代码或执行任何命令之前，必须先通过 `AskUserQuestion` 工具向用户说明操作计划并请求确认，得到用户明确同意后方可执行。禁止用普通文本等待用户回复来代替此流程。**
+**Touch only what you must. Clean up only your own mess.**
 
-具体要求：
-- 在同一轮回复中，用 `AskUserQuestion` 描述将要进行的修改内容或执行的命令及其原因
-- 选项至少包含"确认，执行"和"取消"
-- 收到用户通过 `AskUserQuestion` 的确认回复后，再进行实际操作
+When editing existing code:
 
-此规则适用于：代码编辑、文件创建/删除、Shell 命令执行、配置变更等一切实质性操作。对话期间所有交互均应保持在同一会话中，不得中断。
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
 
-## 3.需求追踪文档 (Documentation Tracking)
+When your changes create orphans:
 
-- **文档先行：** 进行实质性代码修改前，必须在受影响范围的 `docs/` 目录下创建或更新中文需求跟踪文档。
-- **动态更新：** 实施过程中若计划或接口发生变化，必须即时更新文档，**禁止在任务结尾一次性补写**。
-- **核心结构：** 必须包含：目标与摘要、受影响系统、实施计划、测试验证状态、未解决风险。交付前须剔除未落地的设想。
-- **文档收敛：** 当提交commit后整理收缩对应的文档，删除中间状态文档，只保留最终交付情况文档，避免污染文档上下文。
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
 
-## 4. 编码与最小化改动 (Coding & Minimal Changes)
+The test: Every changed line should trace directly to the user's request.
 
-- 保持改动极其克制，聚焦当前目标。**严禁**夹带无意义的代码格式化、纯空白调整或与需求无关的”顺手修改”。
-- **顺应上下文：** 严格复用现有的设计模式、架构分层和命名规范，禁止无故引入平行实现。
-- **语言约定：** 新增的注释和文档默认使用**中文**（除非局部上下文有明确语种要求）。确保非 ASCII 文本编码正确。
+## 4. Goal-Driven Execution
 
-## 5. 高效测试策略 (Testing Strategy)
+**Define success criteria. Loop until verified.**
 
-- **精准覆盖：** 仅覆盖本次改动的核心行为（1个主成功路径 + 1个最关键的失败路径）。确有回归风险时再扩展。
-- **命名直白：** 测试用例命名必须直接体现 `场景 + 预期结果`。
-- **低成本优先：** 只对有意义的功能做测试，优先编写轻量级测试（校验核心编排/业务判断），仅在涉及跨层连线或请求生命周期时编写集成测试。
-- **隔离环境：** 保持测试绝对的确定性。隔离真实网络和外部服务，使用最小必要的 mock/stub。
-注意：建议使用技能时，通过 AskUserQuestion 提供选项让用户决定是否启用，
-不强制每次都走完整流程。简单任务可直接执行。
+Transform tasks into verifiable goals:
 
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
 
+For multi-step tasks, state a brief plan:
 
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
 
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
-拆分如下rule到对于的md文件中：
-
-1. 规则优先级 (Rule Priority)
-就近原则： 局部（子目录）规则 > 项目级规则 > 全局规则。
-
-冲突处理： 若不同层级规则冲突，强制采用离改动文件最近、约束最明确的规则，并在交付说明中注明覆盖原因。
-
-阅读顺序： 执行跨模块任务时，先读取本全局文档，再读取所有受影响目录下的具体 AGENTS.md。
-
-2. 前置确认与跨模块边界 (Pre-checks & Boundaries)
-拒绝对环境的盲目假设： 必须基于当前仓库的实际文件、配置和真实实现建立上下文。
-
-理清上下游： 变更前优先识别调用方、共享契约及部署依赖。
-
-兼容优先： 若影响公共协议或跨模块接口，必须评估受影响范围。优先保持向下兼容；若必须引入破坏性变更，需同步规划受影响方的配套调整。
-
-3. 需求追踪文档 (Documentation Tracking)
-文档先行： 进行实质性代码修改前，必须在受影响范围的 docs/ 目录下创建或更新中文需求跟踪文档。
-
-动态更新： 实施过程中若计划或接口发生变化，必须即时更新文档，禁止在任务结尾一次性补写。
-
-核心结构： 必须包含：目标与摘要、受影响系统、实施计划、测试验证状态、未解决风险。交付前须剔除未落地的设想。
-
-4. 编码与最小化改动 (Coding & Minimal Changes)
-聚焦当前目标。严禁夹带无意义的代码格式化、纯空白调整或与需求无关的“顺手修改”。
-
-顺应上下文： 严格复用现有的设计模式、架构分层和命名规范，禁止无故引入平行实现。
-
-语言约定： 新增的注释和文档默认使用中文（除非局部上下文有明确语种要求）。确保非 ASCII 文本编码正确。
-
-5. 高效测试策略 (Testing Strategy)
-精准覆盖： 仅覆盖本次改动的核心行为（1个主成功路径 + 1个最关键的失败路径）。确有回归风险时再扩展。
-
-命名直白： 测试用例命名必须直接体现 场景 + 预期结果。
-
-低成本优先： 优先编写轻量级测试（校验核心编排/业务判断），仅在涉及跨层连线或请求生命周期时编写集成测试。
-
-隔离环境： 保持测试绝对的确定性。隔离真实网络和外部服务，使用最小必要的 mock/stub。
-
-6. 安全、日志与配置 (Security & Config)
-绝对脱敏： 严禁在代码、日志、文档、测试样例或评审说明中暴露真实密钥、密码、证书或其他敏感凭据。
-
-配置驱动： 环境差异必须由配置控制，严禁硬编码。修改配置时需严格评估默认值和兼容性。
-
-日志规范： 记录足够排查的上下文，但禁止输出敏感载荷或超大对象明细。
-
-7. 交付与代码提交 (Delivery & Commits)
-原子化提交： 必须按真实且独立的改动逻辑拆分 Commit，严禁将不相关的变更混杂提交。
-
-禁止擅自提交： 未经明确指令确认，不要擅自创建 Commit。
-
-交付说明必填项： 最终交付必须明确指出：1. 实际影响范围；2. 是否引发跨模块/上下游影响；3. 已验证内容与未验证项；4. 剩余已知风险。
